@@ -11,7 +11,7 @@ class EstateProperty(models.Model):
     name = fields.Char('Name', required=True)
     description = fields.Text('Description')
     postcode = fields.Char('Post Code')
-    date_availability = fields.Datetime('Availability Date', copy=False,
+    date_availability = fields.Date('Availability Date', copy=False,
                                         default=fields.Date.today() + relativedelta(months=+3))
     expected_price = fields.Float('Expected Price', required=True)
     selling_price = fields.Float('Selling Price', readonly=True, copy=False)
@@ -34,3 +34,9 @@ class EstateProperty(models.Model):
         required=True,
     )
 
+    property_type_id = fields.Many2one("estate.property.type", string="Property Type")
+    salesman = fields.Many2one("res.users", string="Salesman", default=lambda self: self.env.user)
+    buyer = fields.Many2one("res.partner", string="Buyer")
+
+    property_tag_ids = fields.Many2many("estate.property.tag", string="Property Tag")
+    offer_ids = fields.One2many("estate.property.offer", 'property_id', string="Property Offers")
